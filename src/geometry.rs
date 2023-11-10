@@ -22,7 +22,7 @@ impl Vector3 {
         Vector3(self.0 / len, self.1 / len, self.2 / len)
     }
 
-    pub fn dot(v1: &Vector3, v2: &Vector3) -> f64 {
+    pub fn dot(v1: Vector3, v2: Vector3) -> f64 {
         v1.0 * v2.0 + v1.1 * v2.1 + v1.2 * v2.2
     }
 
@@ -127,5 +127,63 @@ impl Sub for Point3 {
 
     fn sub(self, rhs: Point3) -> Vector3 {
         Vector3(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2)
+    }
+}
+
+pub struct Ray {
+    origin: Point3,
+    direction: Vector3,
+}
+
+impl Ray {
+    pub fn new(origin: Point3, direction: Vector3) -> Ray {
+        Ray { origin, direction }
+    }
+
+    pub fn at(&self, t: f64) -> Point3 {
+        self.origin + t * self.direction
+    }
+
+    pub fn origin(&self) -> Point3 {
+        self.origin
+    }
+
+    pub fn direction(&self) -> Vector3 {
+        self.direction
+    }
+}
+
+pub struct Sphere {
+    center: Point3,
+    radius: f64,
+}
+
+impl Sphere {
+    pub fn new(center: Point3, radius: f64) -> Sphere {
+        Sphere { center, radius }
+    }
+
+    pub fn center(&self) -> Point3 {
+        self.center
+    }
+
+    pub fn normal(&self, point: Point3) -> Vector3 {
+        (point - self.center).normalize()
+    }
+
+    // Calculate the intersection of a sphere and ray
+    pub fn hit(&self, ray: &Ray) -> Option<f64> {
+        let oc = ray.origin - self.center;
+        let a = Vector3::dot(ray.direction, ray.direction);
+        let b = 2.0 * Vector3::dot(oc, ray.direction);
+        let c = Vector3::dot(oc, oc) - self.radius.powi(2);
+        let discriminant = b.powi(2) - 4.0 * a * c;
+
+        if discriminant < 0.0 {
+            return None;
+        } else {
+            let t = (b - discriminant.sqrt()) / 2.0 * a;
+            Some(t)
+        }
     }
 }

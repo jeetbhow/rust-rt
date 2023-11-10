@@ -25,7 +25,7 @@ mod tests {
     fn test_vector_dot() {
         let v1 = Vector3(1.0, 2.0, 3.0);
         let v2 = Vector3(4.0, 5.0, 6.0);
-        assert_eq!(Vector3::dot(&v1, &v2), 32.0);
+        assert_eq!(Vector3::dot(v1, v2), 32.0);
     }
 
     #[test]
