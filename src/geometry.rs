@@ -14,7 +14,7 @@ impl Vector3 {
     }
 
     pub fn length_squared(&self) -> f64 {
-        self.0.powi(2) + self.1.powi(2) + self.2.powi(2)
+        self.0 * self.0 + self.1 * self.1 + self.2 * self.2
     }
 
     pub fn normalize(&self) -> Vector3 {
@@ -174,16 +174,16 @@ impl Sphere {
     // Calculate the intersection of a sphere and ray
     pub fn hit(&self, ray: &Ray) -> Option<(f64, f64)> {
         let oc = ray.origin - self.center;
-        let a = Vector3::dot(ray.direction, ray.direction);
-        let b = 2.0 * Vector3::dot(oc, ray.direction);
-        let c = Vector3::dot(oc, oc) - self.radius * self.radius;
-        let discriminant = b * b - 4.0 * a * c;
+        let a = ray.direction.length_squared();
+        let half_b = Vector3::dot(oc, ray.direction);
+        let c = oc.length_squared() - self.radius * self.radius;
+        let discriminant = half_b * half_b - a * c;
 
         if discriminant < 0.0 {
             return None;
         } else {
-            let t_minus = (-b - discriminant.sqrt()) / (2.0 * a);
-            let t_plus = (-b + discriminant.sqrt()) / (2.0 * a);
+            let t_minus = (-half_b - discriminant.sqrt()) / a;
+            let t_plus = (-half_b + discriminant.sqrt()) / a;
             Some((t_minus, t_plus))
         }
     }
