@@ -172,18 +172,19 @@ impl Sphere {
     }
 
     // Calculate the intersection of a sphere and ray
-    pub fn hit(&self, ray: &Ray) -> Option<f64> {
+    pub fn hit(&self, ray: &Ray) -> Option<(f64, f64)> {
         let oc = ray.origin - self.center;
         let a = Vector3::dot(ray.direction, ray.direction);
         let b = 2.0 * Vector3::dot(oc, ray.direction);
-        let c = Vector3::dot(oc, oc) - self.radius.powi(2);
-        let discriminant = b.powi(2) - 4.0 * a * c;
+        let c = Vector3::dot(oc, oc) - self.radius * self.radius;
+        let discriminant = b * b - 4.0 * a * c;
 
         if discriminant < 0.0 {
             return None;
         } else {
-            let t = (b - discriminant.sqrt()) / 2.0 * a;
-            Some(t)
+            let t_minus = (-b - discriminant.sqrt()) / (2.0 * a);
+            let t_plus = (-b + discriminant.sqrt()) / (2.0 * a);
+            Some((t_minus, t_plus))
         }
     }
 }

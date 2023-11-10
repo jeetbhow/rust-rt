@@ -44,7 +44,11 @@ impl Camera {
             let target_px = upper_left_px + Vector3(dx * x as f64, -dy * y as f64, 0.0);
             let ray = Ray::new(self.location, target_px - self.location);
             match sphere.hit(&ray) {
-                Some(t) => *pixel = Rgb([255, 0, 0]),
+                Some(t) => {
+                    let normal = sphere.normal(ray.at(t.0));
+                    let intensity = Vector3::dot(normal, -ray.direction());
+                    *pixel = Rgb([(intensity * 255.0) as u8, 0, 0])
+                }
                 None => *pixel = Rgb([0, 0, 0]),
             }
         }

@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{Point3, Vector3};
+    use crate::geometry::{Point3, Ray, Sphere, Vector3};
 
     #[test]
     fn test_vector_length() {
@@ -50,5 +50,32 @@ mod tests {
         let p2 = Point3(4.0, 5.0, 6.0);
         let result = p1 - p2;
         assert_eq!(result, Vector3(-3.0, -3.0, -3.0));
+    }
+
+    #[test]
+    fn test_sphere_hit_2_solutions() {
+        let sphere = Sphere::new(Point3(0.0, 0.0, -1.0), 1.0);
+        let ray = Ray::new(Point3(0.0, 0.0, 1.0), Vector3(0.0, 0.0, -1.0));
+        let t = sphere.hit(&ray);
+        assert!(t.is_some());
+        assert_eq!(t.unwrap(), (1.0, 3.0));
+    }
+
+    #[cfg(test)]
+    #[test]
+    fn test_sphere_hit_0_solution() {
+        let sphere = Sphere::new(Point3(0.0, 0.0, -1.0), 1.0);
+        let ray = Ray::new(Point3(0.0, 2.0, 0.0), Vector3(0.0, 0.0, -1.0));
+        let t = sphere.hit(&ray);
+        assert!(t.is_none());
+    }
+
+    #[test]
+    fn test_sphere_hit_1_solution() {
+        let sphere = Sphere::new(Point3(0.0, 0.0, -1.0), 1.0);
+        let ray = Ray::new(Point3(0.0, 1.0, 1.0), Vector3(0.0, 0.0, -1.0));
+        let t = sphere.hit(&ray);
+        assert!(t.is_some());
+        assert_eq!(t.unwrap(), (2.0, 2.0));
     }
 }
