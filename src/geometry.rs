@@ -3,7 +3,7 @@ use std::{
     ops::{Add, Div, Mul, Neg, Sub},
 };
 
-const EPSILON: f64 = 1e-6;
+use crate::utility::EPSILON;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector3(pub f64, pub f64, pub f64);
