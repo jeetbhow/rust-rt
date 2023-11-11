@@ -153,6 +153,12 @@ impl Ray {
     }
 }
 
+pub trait Hit {
+    fn hit(&self, ray: &Ray) -> Option<(f64, f64)>;
+    fn normal(&self, point: Point3) -> Vector3;
+}
+
+#[derive(Debug)]
 pub struct Sphere {
     center: Point3,
     radius: f64,
@@ -166,13 +172,11 @@ impl Sphere {
     pub fn center(&self) -> Point3 {
         self.center
     }
+}
 
-    pub fn normal(&self, point: Point3) -> Vector3 {
-        (point - self.center).normalize()
-    }
-
+impl Hit for Sphere {
     // Calculate the intersection of a sphere and ray
-    pub fn hit(&self, ray: &Ray) -> Option<(f64, f64)> {
+    fn hit(&self, ray: &Ray) -> Option<(f64, f64)> {
         let oc = ray.origin - self.center;
         let a = ray.direction.length_squared();
         let half_b = Vector3::dot(oc, ray.direction);
@@ -186,5 +190,9 @@ impl Sphere {
             let t_plus = (-half_b + discriminant.sqrt()) / a;
             Some((t_minus, t_plus))
         }
+    }
+
+    fn normal(&self, point: Point3) -> Vector3 {
+        (point - self.center).normalize()
     }
 }

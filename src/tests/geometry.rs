@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{Point3, Ray, Sphere, Vector3};
+    use crate::geometry::{Hit, Point3, Ray, Sphere, Vector3};
 
     #[test]
     fn test_vector_length() {
